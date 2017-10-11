@@ -1,0 +1,18 @@
+#! /bin/sh
+
+if [ $# != 1 ] ; then
+    echo "Usage: $0 hostname"
+    exit
+fi
+
+NEW_HOSTNAME=$1
+OLD_HOSTNAME=$HOSTNAME
+HOSTNAME=$NEW_HOSTNAME
+hostname $HOSTNAME
+sed -i "s/$OLD_HOSTNAME/$HOSTNAME/" /etc/hostname 2> /dev/null
+sed -i "s/HOSTNAME=$OLD_HOSTNAME/HOSTNAME=$HOSTNAME/" /etc/sysconfig/network 2> /dev/null
+echo "\$HOSTNAME=$HOSTNAME"
+grep -Hn '' /proc/sys/kernel/hostname
+grep -Hn '' /etc/hostname 2> /dev/null
+grep -Hn '' /etc/sysconfig/network 2> /dev/null
+
